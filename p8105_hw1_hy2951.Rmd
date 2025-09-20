@@ -8,3 +8,46 @@ date: "2025-09-20"
 knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
 ```
 
+```{r}
+#Problem 1
+#Load the necessary packages
+library(moderndive) #provide the data set
+library(ggplot2) #plotting
+library(scales) #for date_labels (switch the date from Chinese to English)
+
+#Load the data set into the session
+data("early_january_weather")
+
+#Compute the values for inline reporting
+n_rows <- nrow(early_january_weather) #number of observations
+n_cols <- ncol(early_january_weather) #number of variables
+mean_temp <- mean(early_january_weather$temp, na.rm = TRUE) #mean temperature without missing value
+
+#Build a scatterplot
+p_temp <- ggplot(early_january_weather,
+                 aes(x = time_hour, y = temp, color = humid)) + #map the variables to axes and color
+          geom_point(alpha = 0.7) + #reduce overplotting
+          scale_x_datetime(labels = label_date(format = "%b %d", locale = "en")) +   #setup date label from Chinese to English
+          labs(title = "NYC Early January Weather: Temperature vs Time",
+               x = "Time (hourly)",
+               y = "Temperature (°F)",
+               color = "Humidity") # Add title and axis labels
+
+p_temp #print the plot
+
+ggsave("figs/temp_vs_time_humid.png", plot = p_temp, width = 8, height = 5, dpi = 300) #save the plot
+
+```
+
+Data set description
+This data set contains hourly weather observations from NYC's Central Park station during early January. It has `r n_rows` rows and `r n_cols` columns. The variables are: `r toString(names(early_january_weather))`. The key variables are `time_hour`, `temp`, `humid`. The mean temperature over this period is `r round(mean_temp,1)` °F
+
+Interpretation of the figure:
+The plot shows temperatures follow a daily cycle, being lower at night and higher during the day. Temperatures vary from below 30 °F to above 50 °F. The higher humidity is generally associated with lower temperatures. And lower humidity is generally associated with higher temperatures.
+
+
+
+
+
+
+
